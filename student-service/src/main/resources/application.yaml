@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: STUDENT_SERVICE
+    name: STUDENT-SERVICE
   datasource:
     url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/cerp-student?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&enabledTLSProtocols=TLSv1.2
     username: ${MYSQL_USER:root}

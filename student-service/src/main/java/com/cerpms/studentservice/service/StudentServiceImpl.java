@@ -5,50 +5,44 @@ import com.cerpms.studentservice.entity.Student;
 import com.cerpms.studentservice.projection.StudentRequestDto;
 import com.cerpms.studentservice.repository.CourseRepository;
 import com.cerpms.studentservice.repository.StudentRepository;
-import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.util.NoSuchElementException;
 
 @Service
 @Transactional
+@Slf4j
 public class StudentServiceImpl implements StudentService {
-    @Autowired
-    private CourseRepository courseRepository;
 
     @Autowired
     private StudentRepository studentRepository;
 
+    @Autowired
+    private CourseRepository courseRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
+
     @Override
-    public Student addStudent(StudentRequestDto studentdto, Long courseId) {
-        Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new EntityNotFoundException("Course not found with id: " + courseId));
-        Student st = studentRepository.findByEmailAndPassword(studentdto.getEmail(), studentdto.getPassword());
-        if (st == null) {
-            Student student = new Student();
-            student.setFirstName(studentdto.getFirstName());
-            student.setLastName(studentdto.getLastName());
-            student.setEmail(studentdto.getEmail());
-            student.setGender(studentdto.getGender());
-            student.setPassword(studentdto.getPassword());
-            student.setAddress(studentdto.getAddress());
-            student.setCourse(course);
-            return studentRepository.save(student);
-        } else {
-            return null;
-        }
+    public Student getStudentService(Long studentId) {
+        return studentRepository.findById(studentId).orElseThrow(()->new NoSuchElementException("Student not found for ID " + studentId));
     }
 
     @Override
-    @Cacheable(cacheNames = "student_details", key = "#studentId")
-    public Student getStudentDetails(Long studentId) {
-        return studentRepository.findById(studentId)
-                .orElseThrow(() -> new EntityNotFoundException("Student not found with id: " + studentId));
+    public Student signService(String email, String password) {
+        return studentRepository.findByEmailAndPassword(email, password).orElseThrow(()->new NoSuchElementException("Invalid Email or Password"));
     }
 
     @Override
-    public Student authenticateStudent(String email, String password) {
-        return studentRepository.findByEmailAndPassword(email, password);
+    public Student signupService(StudentRequestDto request) {
+        Course course = courseRepository.findById(request.getCourseId()).orElseThrow(()-> new NoSuchElementException("Course Not found for ID " + request.getCourseId()));
+        Student newStudent = modelMapper.map(request,Student.class);
+        newStudent.setCourse(course);
+        studentRepository.save(newStudent);
+        return newStudent;
     }
 }

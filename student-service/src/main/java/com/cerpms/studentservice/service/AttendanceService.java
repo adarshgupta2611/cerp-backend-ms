@@ -1,18 +1,14 @@
 package com.cerpms.studentservice.service;
 
 import com.cerpms.studentservice.entity.Attendance;
-import com.cerpms.studentservice.projection.AttendanceList;
 import com.cerpms.studentservice.projection.AttendanceRecord;
-import com.cerpms.studentservice.projection.AttendanceRequestDto;
 
 import java.util.List;
 
 public interface AttendanceService {
-    List<AttendanceRecord> showAttendanceByStudent(Long studentId);
+    List<AttendanceRecord> getAttendanceService(Long studentId);
 
-    Attendance addAttendance(AttendanceRequestDto attendancedto, String subjectName);
+    Attendance addAttendanceService(String subjectName, Long studentId, int attendance);
 
-    List<AttendanceList> showAttendance(String subjectName);
-
-    void updateAttendance(int attendance, String subjectName, Long studentId);
+    Attendance updateAttendanceService(String subjectName, Long studentId, int attendance);
 }

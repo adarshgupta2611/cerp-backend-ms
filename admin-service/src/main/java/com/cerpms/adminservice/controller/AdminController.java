@@ -1,16 +1,17 @@
 package com.cerpms.adminservice.controller;
 
 import com.cerpms.adminservice.entity.Admin;
+import com.cerpms.adminservice.projection.CourseDTO;
+import com.cerpms.adminservice.projection.SubjectDTO;
 import com.cerpms.adminservice.service.AdminService;
+import com.cerpms.adminservice.service.FeignInterfaceClient;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -20,10 +21,31 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
+    @Autowired
+    private FeignInterfaceClient feignInterfaceClient;
+
     @PostMapping("/signin")
     public ResponseEntity<?> login(@RequestBody @Valid Admin admindto) {
         Optional<Admin> admin = adminService.authenticateAdmin(admindto.getEmail(), admindto.getPassword());
         return admin.isPresent() ? ResponseEntity.ok(Map.of("id", admin.get().getId()))
                 : ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
     }
+
+    @GetMapping("/courses")
+    public ResponseEntity<?> getCourseList() {
+        List<CourseDTO> courseList = feignInterfaceClient.getCourseList();
+        return ResponseEntity.ok(courseList);
+    }
+
+    @GetMapping("/courses/{courseName}")
+    public ResponseEntity<?> getSubjectList(@PathVariable String courseName) {
+        List<SubjectDTO> subjectDTOList = feignInterfaceClient.getSubjectList(courseName);
+        return ResponseEntity.ok(subjectDTOList);
+    }
+
+    @GetMapping("/attendance/{subjectName}")
+    public ResponseEntity<?> getAttendanceBySubject(@PathVariable String subjectName) {
+        return ResponseEntity.ok(feignInterfaceClient.getAttendanceBySubject(subjectName));
+    }
+
 }

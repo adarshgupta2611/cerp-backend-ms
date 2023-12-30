@@ -1,11 +1,8 @@
 package com.cerpms.studentservice.controller;
 
 import com.cerpms.studentservice.entity.Attendance;
-import com.cerpms.studentservice.projection.AttendanceList;
-import com.cerpms.studentservice.projection.AttendanceRequestDto;
-import com.cerpms.studentservice.projection.UpdateAttendanceDto;
+import com.cerpms.studentservice.projection.AttendanceRecord;
 import com.cerpms.studentservice.service.AttendanceService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,40 +12,28 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/attendance")
-@CrossOrigin(origins = "http://localhost:3000/")
 public class AttendanceController {
+
     @Autowired
     private AttendanceService attendanceService;
 
     @GetMapping("/{studentId}")
-    public ResponseEntity<?> showAttendance(@PathVariable Long studentId) {
-        return ResponseEntity.ok(attendanceService.showAttendanceByStudent(studentId));
+    public ResponseEntity<?> getAttendance(@PathVariable Long studentId) {
+        List<AttendanceRecord> attendanceRecords = attendanceService.getAttendanceService(studentId);
+        return !attendanceRecords.isEmpty()? ResponseEntity.status(200).body(attendanceRecords) : ResponseEntity.status(500).body("Attendance not found for student " + studentId);
     }
 
     @PostMapping("/{subjectName}")
-    public ResponseEntity<?> addAttendance(@Valid @RequestBody AttendanceRequestDto attendancedto,
-                                           @PathVariable String subjectName) {
-        Attendance attendance = attendanceService.addAttendance(attendancedto, subjectName);
-        if (attendance != null)
-            return ResponseEntity.status(HttpStatus.CREATED).body(attendance);
-        else
-            return ResponseEntity.status(500).body("Attendance is already present");
-    }
-
-    @GetMapping("/admins/{subjectName}")
-    public ResponseEntity<?> showAttendance(@PathVariable String subjectName) {
-        List<AttendanceList> attendanceList = attendanceService.showAttendance(subjectName);
-        if (attendanceList != null)
-            return ResponseEntity.ok(attendanceList);
-        else
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid subject name");
+    public ResponseEntity<?> addAttendance(@PathVariable String subjectName, @RequestBody AttendanceAddDto attendanceAddDto){
+        Attendance attendance = attendanceService.addAttendanceService(subjectName, attendanceAddDto.studentId(), attendanceAddDto.attendance());
+        return attendance!=null ? ResponseEntity.status(201).body(attendance): ResponseEntity.status(500).body("Attendance Already Present");
     }
 
     @PatchMapping("/{subjectName}/{studentId}")
-    public ResponseEntity<?> updateAttendance(@RequestBody UpdateAttendanceDto attendance,
-                                              @PathVariable String subjectName, @PathVariable Long studentId) {
-        attendanceService.updateAttendance(attendance.getAttendance(), subjectName, studentId);
-        return ResponseEntity.ok("updated successfully");
+    public ResponseEntity<?> updateAttendance(@PathVariable String subjectName, @PathVariable Long studentId, @RequestBody int attendance){
+        Attendance updateAttendance = attendanceService.updateAttendanceService(subjectName, studentId, attendance);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(updateAttendance);
     }
-
 }
+
+record AttendanceAddDto(Long studentId,int attendance){}

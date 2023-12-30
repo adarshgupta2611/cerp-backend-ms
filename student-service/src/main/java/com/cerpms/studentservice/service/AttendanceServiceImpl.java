@@ -3,24 +3,21 @@ package com.cerpms.studentservice.service;
 import com.cerpms.studentservice.entity.Attendance;
 import com.cerpms.studentservice.entity.Student;
 import com.cerpms.studentservice.entity.Subject;
-import com.cerpms.studentservice.projection.AttendanceList;
 import com.cerpms.studentservice.projection.AttendanceRecord;
-import com.cerpms.studentservice.projection.AttendanceRequestDto;
 import com.cerpms.studentservice.repository.AttendanceRepository;
 import com.cerpms.studentservice.repository.StudentRepository;
 import com.cerpms.studentservice.repository.SubjectRepository;
-import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
 public class AttendanceServiceImpl implements AttendanceService {
+
     @Autowired
     private AttendanceRepository attendanceRepository;
 
@@ -31,41 +28,31 @@ public class AttendanceServiceImpl implements AttendanceService {
     private SubjectRepository subjectRepository;
 
     @Override
-    @Cacheable(cacheNames = "student_attendance", key = "#studentId")
-    public List<AttendanceRecord> showAttendanceByStudent(Long studentId) {
-        return attendanceRepository.findAttendanceByStudent(studentId);
+    public List<AttendanceRecord> getAttendanceService(Long studentId) {
+        return attendanceRepository.findAttendanceByStudentId(studentId);
     }
 
     @Override
-    public Attendance addAttendance(AttendanceRequestDto attendancedto, String subjectName) {
-        Student student = studentRepository.findById(attendancedto.getStudentId())
-                .orElseThrow(() -> new EntityNotFoundException("Student not found with id: " + attendancedto.getStudentId()));
+    public Attendance addAttendanceService(String subjectName, Long studentId, int attendance) {
+        Student student = studentRepository.findById(studentId).orElseThrow();
+        Subject subject = subjectRepository.findBySubjectName(subjectName).orElseThrow();
 
-        Subject subject = subjectRepository.findBySubjectName(subjectName);
-        Attendance at = attendanceRepository.findAttendanceByStudentAndSubject(student, subject);
-        Attendance attendance = new Attendance();
-        if (at == null) {
-            attendance.setStudent(student);
-            attendance.setSubject(subject);
-            attendance.setAttendance(attendancedto.getAttendance());
-            return attendanceRepository.save(attendance);
-        } else {
+        Optional<Attendance> newAttendanceOptional = attendanceRepository.findBySubjectAndStudent(subject, student);
+        if (newAttendanceOptional.isPresent()) {
             return null;
+        } else {
+            Attendance newAttendance = new Attendance(attendance, subject, student);
+            attendanceRepository.save(newAttendance);
+            return newAttendance;
         }
     }
 
     @Override
-    @Cacheable(cacheNames = "subject_attendance", key = "#subjectName")
-    public List<AttendanceList> showAttendance(String subjectName) {
-        return attendanceRepository.findAllBySubjectNameAndSortedById(subjectName);
-    }
-
-    @Override
-    @CachePut(cacheNames = "subject_attendance", key = "#subjectName")
-    public void updateAttendance(int attendance, String subjectName, Long studentId) {
+    public Attendance updateAttendanceService(String subjectName, Long studentId, int attendance) {
         Student student = studentRepository.findById(studentId).get();
-        Subject subject = subjectRepository.findBySubjectName(subjectName);
+        Subject subject = subjectRepository.findBySubjectName(subjectName).get();
         Attendance at = attendanceRepository.findAttendanceByStudentAndSubject(student, subject);
         at.setAttendance(attendance);
+        return at;
     }
 }

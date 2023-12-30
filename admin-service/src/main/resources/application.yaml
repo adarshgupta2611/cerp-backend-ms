@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: ADMIN_SERVICE
+    name: ADMIN-SERVICE
   datasource:
     url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/cerp-admin?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&enabledTLSProtocols=TLSv1.2
     username: ${MYSQL_USER:root}

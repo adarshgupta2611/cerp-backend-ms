@@ -4,7 +4,9 @@ import com.cerpms.studentservice.entity.Student;
 import com.cerpms.studentservice.projection.StudentRequestDto;
 
 public interface StudentService {
-	Student addStudent(StudentRequestDto student, Long courseId);
-	Student getStudentDetails(Long studentId);
-	Student authenticateStudent(String email, String password);
+    Student getStudentService(Long studentId);
+
+    Student signService(String email, String password);
+
+    Student signupService(StudentRequestDto request);
 }
