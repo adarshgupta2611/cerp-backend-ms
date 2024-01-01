@@ -1,10 +1,11 @@
 package com.cerpms.adminservice.service;
 
 import com.cerpms.adminservice.projection.CourseDTO;
+import com.cerpms.adminservice.projection.ScheduleRequestDto;
 import com.cerpms.adminservice.projection.SubjectDTO;
+import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,5 +20,14 @@ public interface FeignInterfaceClient {
 
     @GetMapping("/adminHelp/attendance/{subjectName}")
     List<Object> getAttendanceBySubject(@PathVariable String subjectName);
+
+    @PostMapping("/adminHelp/{courseName}")
+    Object addSchedule(@Valid @RequestBody ScheduleRequestDto scheduledto, @PathVariable String courseName);
+
+    @PutMapping("/adminHelp/{courseName}")
+    Object editSchedule(@Valid @RequestBody ScheduleRequestDto schedule, @PathVariable String courseName);
+
+    @DeleteMapping("/adminHelp/{courseName}")
+    Object deleteEmpDetails(@Valid @RequestBody ScheduleRequestDto schedule);
 
 }

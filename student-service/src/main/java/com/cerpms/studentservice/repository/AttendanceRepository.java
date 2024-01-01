@@ -1,7 +1,6 @@
 package com.cerpms.studentservice.repository;
 
 import com.cerpms.studentservice.entity.Attendance;
-import com.cerpms.studentservice.entity.Course;
 import com.cerpms.studentservice.entity.Student;
 import com.cerpms.studentservice.entity.Subject;
 import com.cerpms.studentservice.projection.AttendanceRecord;

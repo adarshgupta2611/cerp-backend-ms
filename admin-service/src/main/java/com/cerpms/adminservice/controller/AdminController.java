@@ -2,6 +2,7 @@ package com.cerpms.adminservice.controller;
 
 import com.cerpms.adminservice.entity.Admin;
 import com.cerpms.adminservice.projection.CourseDTO;
+import com.cerpms.adminservice.projection.ScheduleRequestDto;
 import com.cerpms.adminservice.projection.SubjectDTO;
 import com.cerpms.adminservice.service.AdminService;
 import com.cerpms.adminservice.service.FeignInterfaceClient;
@@ -46,6 +47,22 @@ public class AdminController {
     @GetMapping("/attendance/{subjectName}")
     public ResponseEntity<?> getAttendanceBySubject(@PathVariable String subjectName) {
         return ResponseEntity.ok(feignInterfaceClient.getAttendanceBySubject(subjectName));
+    }
+
+    @PostMapping("/{courseName}")
+    public ResponseEntity<?> addSchedule(@Valid @RequestBody ScheduleRequestDto scheduledto, @PathVariable String courseName) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(feignInterfaceClient.addSchedule(scheduledto, courseName));
+    }
+
+    @PutMapping("/{courseName}")
+    public ResponseEntity<?> editSchedule(@Valid @RequestBody ScheduleRequestDto schedule, @PathVariable String courseName) {
+        feignInterfaceClient.editSchedule(schedule, courseName);
+        return ResponseEntity.ok("schedule edit successfully");
+    }
+
+    @DeleteMapping("/{courseName}")
+    public ResponseEntity<?> deleteEmpDetails(@Valid @RequestBody ScheduleRequestDto schedule) {
+        return ResponseEntity.status(204).body(feignInterfaceClient.deleteEmpDetails(schedule));
     }
 
 }
