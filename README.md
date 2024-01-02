@@ -9,3 +9,4 @@ Spring Boot Version : 3.1.5
 - Microservice Architecture.
 - Spring Cloud Netflix Eureka Service Registry.
 - OpenFeign Inter Communication between Services.
+- Spring Cloud API Gateway as entry point.
