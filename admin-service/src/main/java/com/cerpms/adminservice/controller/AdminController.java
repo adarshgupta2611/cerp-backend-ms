@@ -6,6 +6,7 @@ import com.cerpms.adminservice.projection.ScheduleRequestDto;
 import com.cerpms.adminservice.projection.SubjectDTO;
 import com.cerpms.adminservice.service.AdminService;
 import com.cerpms.adminservice.service.FeignInterfaceClient;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
