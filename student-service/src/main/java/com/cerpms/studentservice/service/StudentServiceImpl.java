@@ -29,20 +29,25 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student getStudentService(Long studentId) {
-        return studentRepository.findById(studentId).orElseThrow(()->new NoSuchElementException("Student not found for ID " + studentId));
+        return studentRepository.findById(studentId).orElseThrow(() -> new NoSuchElementException("Student not found for ID " + studentId));
     }
 
     @Override
     public Student signService(String email, String password) {
-        return studentRepository.findByEmailAndPassword(email, password).orElseThrow(()->new NoSuchElementException("Invalid Email or Password"));
+        return studentRepository.findByEmailAndPassword(email, password).orElseThrow(() -> new NoSuchElementException("Invalid Email or Password"));
     }
 
     @Override
     public Student signupService(StudentRequestDto request) {
-        Course course = courseRepository.findById(request.getCourseId()).orElseThrow(()-> new NoSuchElementException("Course Not found for ID " + request.getCourseId()));
-        Student newStudent = modelMapper.map(request,Student.class);
+        Course course = courseRepository.findById(request.getCourseId()).orElseThrow(() -> new NoSuchElementException("Course Not found for ID " + request.getCourseId()));
+        Student newStudent = modelMapper.map(request, Student.class);
         newStudent.setCourse(course);
         studentRepository.save(newStudent);
         return newStudent;
+    }
+
+    @Override
+    public Student findByEmail(String email) {
+        return studentRepository.findByEmail(email).orElseThrow(() -> new NoSuchElementException("Student not found for ID " + email));
     }
 }

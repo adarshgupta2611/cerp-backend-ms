@@ -6,7 +6,7 @@ import com.cerpms.adminservice.projection.ScheduleRequestDto;
 import com.cerpms.adminservice.projection.SubjectDTO;
 import com.cerpms.adminservice.service.AdminService;
 import com.cerpms.adminservice.service.FeignInterfaceClient;
-import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import com.cerpms.adminservice.service.JwtHelper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/admins")
+@RequestMapping("/admin-service/admins")
 public class AdminController {
     @Autowired
     private AdminService adminService;
@@ -26,11 +26,18 @@ public class AdminController {
     @Autowired
     private FeignInterfaceClient feignInterfaceClient;
 
+    @Autowired
+    private JwtHelper jwtHelper;
+
     @PostMapping("/signin")
     public ResponseEntity<?> login(@RequestBody @Valid Admin admindto) {
         Optional<Admin> admin = adminService.authenticateAdmin(admindto.getEmail(), admindto.getPassword());
-        return admin.isPresent() ? ResponseEntity.ok(Map.of("id", admin.get().getId()))
-                : ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+        return admin.isPresent() ? ResponseEntity.status(200).body(Map.of("id", admin.get().getId(), "token", jwtHelper.generateToken(admin.get().getEmail()))) : ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+    }
+
+    @PostMapping("/auth")
+    public ResponseEntity<?> auth(@RequestBody String email) {
+        return ResponseEntity.ok(adminService.findByEmail(email).getEmail());
     }
 
     @GetMapping("/courses")

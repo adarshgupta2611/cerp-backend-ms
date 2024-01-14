@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/feedback")
+@RequestMapping("/student-service/feedback")
 @CrossOrigin(origins = "http://localhost:3000/")
 public class FeedbackController {
     @Autowired

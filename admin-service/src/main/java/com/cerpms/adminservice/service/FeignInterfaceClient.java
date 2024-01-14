@@ -12,22 +12,22 @@ import java.util.List;
 @FeignClient(name = "STUDENT-SERVICE")
 public interface FeignInterfaceClient {
 
-    @GetMapping("/adminHelp/courses")
+    @GetMapping("/student-service/adminHelp/courses")
     List<CourseDTO> getCourseList();
 
-    @GetMapping("/adminHelp/courses/{courseName}")
+    @GetMapping("/student-service/adminHelp/courses/{courseName}")
     List<SubjectDTO> getSubjectList(@PathVariable String courseName);
 
-    @GetMapping("/adminHelp/attendance/{subjectName}")
+    @GetMapping("/student-service/adminHelp/attendance/{subjectName}")
     List<Object> getAttendanceBySubject(@PathVariable String subjectName);
 
-    @PostMapping("/adminHelp/{courseName}")
+    @PostMapping("/student-service/adminHelp/{courseName}")
     Object addSchedule(@Valid @RequestBody ScheduleRequestDto scheduledto, @PathVariable String courseName);
 
-    @PutMapping("/adminHelp/{courseName}")
+    @PutMapping("/student-service/adminHelp/{courseName}")
     Object editSchedule(@Valid @RequestBody ScheduleRequestDto schedule, @PathVariable String courseName);
 
-    @DeleteMapping("/adminHelp/{courseName}")
+    @DeleteMapping("/student-service/adminHelp/{courseName}")
     Object deleteEmpDetails(@Valid @RequestBody ScheduleRequestDto schedule);
 
 }

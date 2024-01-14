@@ -6,4 +6,5 @@ import java.util.Optional;
 
 public interface AdminService {
     Optional<Admin> authenticateAdmin(String email, String password);
+    Admin findByEmail(String email);
 }

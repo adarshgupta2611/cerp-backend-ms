@@ -9,4 +9,6 @@ public interface StudentService {
     Student signService(String email, String password);
 
     Student signupService(StudentRequestDto request);
+
+    Student findByEmail(String email);
 }
