@@ -46,10 +46,13 @@ services:
     build:
       context: ./admin-service/
       dockerfile: Dockerfile
+    links:
+      - service-registry
     ports:
       - "8081:8081"
     networks:
       springboot-mysql-net:
+      service-registry-client:
     environment:
       - MYSQL_HOST=database
       - MYSQL_PORT=3306
@@ -68,10 +71,13 @@ services:
     build:
       context: ./student-service/
       dockerfile: Dockerfile
+    links:
+      - service-registry
     ports:
       - "8082:8082"
     networks:
       springboot-mysql-net:
+      service-registry-client:
     environment:
       - MYSQL_HOST=database
       - MYSQL_PORT=3306
