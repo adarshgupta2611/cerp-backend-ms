@@ -115,6 +115,8 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
+        <finalName>STUDENT-SERVICE</finalName>
+
     </build>
 
 </project>

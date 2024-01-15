@@ -92,6 +92,8 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
+        <finalName>API-GATEWAY</finalName>
+
     </build>
 
 </project>

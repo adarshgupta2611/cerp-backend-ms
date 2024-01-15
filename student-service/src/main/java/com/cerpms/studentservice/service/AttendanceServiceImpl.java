@@ -9,6 +9,7 @@ import com.cerpms.studentservice.repository.StudentRepository;
 import com.cerpms.studentservice.repository.SubjectRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     private SubjectRepository subjectRepository;
 
     @Override
+    @Cacheable(cacheNames = "student_attendance_getAttendanceService", key = "#studentId")
     public List<AttendanceRecord> getAttendanceService(Long studentId) {
         return attendanceRepository.findAttendanceByStudentId(studentId);
     }

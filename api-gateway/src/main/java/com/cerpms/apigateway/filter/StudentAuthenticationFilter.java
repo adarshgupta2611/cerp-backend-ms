@@ -9,8 +9,6 @@ import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFac
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.CompletableFuture;
-
 @Component
 @Slf4j
 public class StudentAuthenticationFilter extends AbstractGatewayFilterFactory<StudentAuthenticationFilter.Config> {

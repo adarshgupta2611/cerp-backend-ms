@@ -12,6 +12,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -49,6 +50,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
+    @Cacheable(cacheNames = "student_feedback_showFeedback", key = "#subjectName")
     public List<FeedbackList> showFeedback(String subjectName) {
         return feedbackRepository.findAllBySubjectNameAndSortedById(subjectName);
     }

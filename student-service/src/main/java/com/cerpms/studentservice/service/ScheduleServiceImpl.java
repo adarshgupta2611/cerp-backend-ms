@@ -9,6 +9,7 @@ import com.cerpms.studentservice.repository.ScheduleRepository;
 import com.cerpms.studentservice.repository.SubjectRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,6 +28,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     private SubjectRepository subjectRepository;
 
     @Override
+    @Cacheable(cacheNames = "student_schedule_getSchedule", key = "#courseName")
     public List<Schedule> getSchedule(String courseName) {
         return scheduleRepository.findFullScheduleByCourse(courseName);
     }

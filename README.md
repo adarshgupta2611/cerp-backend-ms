@@ -6,7 +6,8 @@ Java 17
 Spring Boot Version : 3.1.5
 
 ## Features Added:
-- Microservice Architecture.
+- Microservice Architecture using Spring Cloud.
 - Spring Cloud Netflix Eureka Service Registry.
 - OpenFeign Inter Communication between Services.
 - Spring Cloud API Gateway as entry point.
+- JWT Authentication in API Gateway.

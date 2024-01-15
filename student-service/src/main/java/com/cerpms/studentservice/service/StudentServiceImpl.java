@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
@@ -28,6 +29,7 @@ public class StudentServiceImpl implements StudentService {
     private ModelMapper modelMapper;
 
     @Override
+    @Cacheable(cacheNames = "student_getStudentService", key = "#studentId")
     public Student getStudentService(Long studentId) {
         return studentRepository.findById(studentId).orElseThrow(() -> new NoSuchElementException("Student not found for ID " + studentId));
     }
@@ -47,6 +49,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    @Cacheable(cacheNames = "student_findByEmail", key = "#email")
     public Student findByEmail(String email) {
         return studentRepository.findByEmail(email).orElseThrow(() -> new NoSuchElementException("Student not found for ID " + email));
     }
