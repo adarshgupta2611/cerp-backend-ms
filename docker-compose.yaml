@@ -59,6 +59,7 @@ services:
       - MYSQL_USER=root
       - MYSQL_PASSWORD=cerp_root
       - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_PORT=6379
       - EUREKA_HOST=service-registry
       - EUREKA_PORT=8761
     depends_on:
@@ -84,6 +85,7 @@ services:
       - MYSQL_USER=root
       - MYSQL_PASSWORD=cerp_root
       - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_PORT=6379
       - EUREKA_HOST=service-registry
       - EUREKA_PORT=8761
     depends_on:
@@ -91,6 +93,7 @@ services:
       - api-gateway
       - database
       - redis
+      - admin-service
 
 networks:
   springboot-mysql-net:
