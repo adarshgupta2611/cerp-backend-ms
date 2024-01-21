@@ -11,3 +11,4 @@ Spring Boot Version : 3.1.5
 - OpenFeign Inter Communication between Services.
 - Spring Cloud API Gateway as entry point.
 - JWT Authentication in API Gateway.
+- Docker Compose support for the application.

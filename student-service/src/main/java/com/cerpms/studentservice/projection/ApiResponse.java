@@ -2,10 +2,11 @@ package com.cerpms.studentservice.projection;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-public class ApiResponse {
+public class ApiResponse implements Serializable {
     private LocalDateTime timestamp;
     private String message;
 

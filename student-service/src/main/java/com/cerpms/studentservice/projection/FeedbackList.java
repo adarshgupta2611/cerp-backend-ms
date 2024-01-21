@@ -2,8 +2,10 @@ package com.cerpms.studentservice.projection;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class FeedbackList {
+public class FeedbackList  implements Serializable {
 
     private long studentId;
     private int knowledge;

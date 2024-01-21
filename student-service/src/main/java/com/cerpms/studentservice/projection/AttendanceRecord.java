@@ -3,8 +3,10 @@ package com.cerpms.studentservice.projection;
 import com.cerpms.studentservice.entity.Course;
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class AttendanceRecord {
+public class AttendanceRecord  implements Serializable {
     private int attendance;
     private String subjectName;
     private String firstName;
